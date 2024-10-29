@@ -1,0 +1,68 @@
+﻿@model VictuzApp.ViewModels.ParticipantEvent
+@{
+    ViewData["Title"] = "RegisterForActivity";
+}
+
+<h1>RegisterForActivity</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Maximum Participants
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        
+            <tr>
+                <td>
+                    @Model.Event.Title
+                </td>
+                <td>
+                    @Model.Event.Description
+                </td>
+                <td>
+                    @Model.Event.Date
+                </td>
+                <td>
+                    @Model.Event.MaxParticipants
+                </td>
+            </tr>
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="RegisterForActivity" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Event.Id" />
+            <div class="form-group">
+                <div class="form-group">
+                    <label asp-for="SelectedParticipantId" class="control-label"></label>
+                    <select asp-for="SelectedParticipantId" class="form-control" required>
+                        <option value="">--Select a Participant--</option>
+                        @foreach (var participant in Model.Participants)
+                        {
+                            <option value="@participant.Id">@participant.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="activityId" value="@Model.Event.Id" />
+
+                <button type="submit" class="btn btn-primary">Register </button>
+            </div>
+        </form>
+    </div>
+</div> 
