@@ -7,7 +7,6 @@ namespace VictuzApp.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<Event> Events { get; set; }
-        public DbSet<Participant> Participants { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -17,9 +16,8 @@ namespace VictuzApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            //Relaties
             modelBuilder.Entity<Event>()
-                .HasMany(a => a.Participants)
+                .HasMany(e => e.Users)
                 .WithMany(p => p.Events);
 
             //Activity Data Seed (Dummy Data)
@@ -32,45 +30,11 @@ namespace VictuzApp.Data
                 MaxParticipants = 30
             };
 
-            //Participants Data Seed (Dummy Data)
-            Participant p = new Participant()
-            {
-                Id = 1,
-                Name = "Rob Cilissen",
-                Email = "Rob.Cilissen@zuyd.nl",
-                IsMember = true
-            };
-
-            //BoardMember Data Seed (Dummy Data)
-            BoardMember bm = new BoardMember()
-            {
-                Id = 2,
-                Name = "Miel Noelanders",
-                Email = "Miel.Noelanders@zuyd.be",
-                IsMember = true
-            };
-
-            //Administrator Data Seed (Dummy Data)
-            Administrator admin = new Administrator()
-            {
-                Id = 3,
-                Name = "admin",
-                Email = "admin@admin.nl",
-                IsMember = true
-            };
+           
 
             // Add Data To Database
             modelBuilder.Entity<Event>()
                 .HasData(e);
-
-            modelBuilder.Entity<Participant>()
-                .HasData(p);
-
-            modelBuilder.Entity<BoardMember>()
-                .HasData(bm);
-
-            modelBuilder.Entity<Administrator>()
-                .HasData(admin);
         }
     }
 }

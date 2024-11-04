@@ -2,70 +2,52 @@
 using Microsoft.EntityFrameworkCore;
 using VictuzApp.Data;
 using VictuzApp.Models;
-using VictuzApp.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace VictuzApp.Controllers
 {
     public class EventsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EventsController(ApplicationDbContext context)
+        public EventsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
-
-        //GET: Activities
-        public async Task<IActionResult> IndexParticipant()
+        [HttpGet]
+        public async Task<IActionResult> RegisterForActivity(int eventId)
         {
-            return View(await _context.Events.ToListAsync());
-        }
-
-        //GET: Register for an activity
-        public async Task<IActionResult> RegisterForActivity(int activityId)
-        {
-            var activity = await _context.Events.FirstOrDefaultAsync(a => a.Id == activityId);
-            var participants = await _context.Participants.ToListAsync();
-
-            ParticipantEvent pa = new ParticipantEvent()
+            if (eventId == null)
             {
-                Event = activity
-                ,
-                Participants = participants
-            };
-            return View(pa);
+                return NotFound();
+            }
+
+            var e = await _context.Events
+                .FirstOrDefaultAsync(m => m.Id == eventId);
+            if (e == null)
+            {
+                return NotFound();
+            }
+
+            return View(e);
         }
-        //POST: Register for an activity
+        //Register for an activity
         [HttpPost]
-        public async Task<IActionResult> RegisterForActivity(int activityId, int selectedParticipantId)
+        public async Task<IActionResult> RegisterActivity(int eventId)
         {
-            _context.Database.ExecuteSqlRaw("INSERT INTO ActivityParticipant (ActivitiesId, ParticipantsId) VALUES ({0},{1})", activityId, selectedParticipantId);
+            string userId = _userManager.GetUserId(User);
+            _context.Database.ExecuteSqlRaw("INSERT INTO EventParticipant (EventsId, UsersId) VALUES ({0},{1})", eventId, userId);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("IndexParticipant");
+            return View("RegistrationSucces");
         }
 
         // GET: Activities
         public async Task<IActionResult> Index()
         {
             return View(await _context.Events.ToListAsync());
-        }
-        // GET: Activity details
-        public async Task<IActionResult> DetailsParticipant(int id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var activity = await _context.Events
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (activity == null)
-            {
-                return NotFound();
-            }
-
-            return View(activity);
         }
         // GET: Activities/Details/5
         public async Task<IActionResult> Details(int? id)

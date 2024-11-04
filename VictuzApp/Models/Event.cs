@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace VictuzApp.Models
 {
@@ -14,6 +15,6 @@ namespace VictuzApp.Models
         public DateTime Date { get; set; }
         [Required]
         public int MaxParticipants { get; set; }
-        public ICollection<Participant>? Participants { get; set; }
+        public ICollection<Participant>? Users { get; set; }
     }
 }
