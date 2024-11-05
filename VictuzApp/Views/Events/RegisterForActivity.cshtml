@@ -36,11 +36,34 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-<form asp-action="RegisterActivity" method="post">
-    <input type="hidden" name="eventId" value="@Model?.Id" />
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-action="RegisterActivity" method="post">
+        <input type="hidden" name="eventId" value="@Model?.Id" />
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+    </div>
+}
+else
+{
+    <form asp-action="RegisterActivityGuest" method="post">
+        
+        <input type="hidden" name="eventId" value="@Model?.Id" />
+        <div>
+            <input type="email" name="email" placeholder="name@example.com" />
+            <label>Email</label>
+        </div>
+        <div>
+            <input type="text" name="name"/>
+            <label>Name</label>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+}
+

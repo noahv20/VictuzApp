@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using VictuzApp.Data;
 using VictuzApp.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VictuzApp.Controllers
 {
@@ -33,8 +34,28 @@ namespace VictuzApp.Controllers
 
             return View(e);
         }
+        [HttpPost]
+        public async Task<IActionResult> RegisterActivityGuest(int eventId, string name, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user == null)
+            {
+                user = new IdentityUser()
+                {
+                    Email = email,
+                    UserName = name
+                };
+                await _userManager.CreateAsync(user);
+            }
+            string userId = await _userManager.GetUserIdAsync(user);
+            _context.Database.ExecuteSqlRaw("INSERT INTO EventParticipant (EventsId, UsersId) VALUES ({0},{1})", eventId, userId);
+            await _context.SaveChangesAsync();
+
+            return View("RegistrationSucces");
+        }
         //Register for an activity
         [HttpPost]
+        [Authorize] 
         public async Task<IActionResult> RegisterActivity(int eventId)
         {
             string userId = _userManager.GetUserId(User);
