@@ -1,21 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using VictuzApp.Models;
+using VictuzApp.Services;
 
 namespace VictuzApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        public BestActivityService _bestactivityService;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, BestActivityService bestactivityService)
         {
             _logger = logger;
+            _bestactivityService = bestactivityService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var discounts = await _bestactivityService.GetDiscountsAsync();
+            return View(discounts);
         }
 
         public IActionResult Privacy()

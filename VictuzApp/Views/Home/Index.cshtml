@@ -1,7 +1,17 @@
-﻿@{
+﻿@model List<VictuzApp.Services.BestActivity>
+
+<h2>Activiteiten van de maand:</h2>
+<ul>
+    @foreach (var bestactivity in Model)
+    {
+        <li><strong>@bestactivity.Name</strong>: @bestactivity.Description</li>
+    }
+</ul>
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
-
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

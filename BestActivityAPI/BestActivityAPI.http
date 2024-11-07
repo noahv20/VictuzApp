@@ -1,0 +1,6 @@
+@BestActivityAPI_HostAddress = http://localhost:5054
+
+GET {{BestActivityAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
