@@ -40,10 +40,19 @@ footer .container {
     justify-content: space-between;
 }
 
-.nav-button {
+.nav-button-wordlid {
     margin-top: 20px;
     background-color: #FF7F50;
     width: 80px;
     height: 40px;
     font-size: 12px
 }
+
+.nav-button-afmelden {
+    margin-top: 20px;
+    background-color: #D32F2F;
+    width: 80px;
+    height: 40px;
+    font-size: 12px
+}
+

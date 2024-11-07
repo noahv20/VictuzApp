@@ -93,6 +93,15 @@ namespace VictuzApp.Controllers
         {
             return View();
         }
+        public IActionResult Sponsoren()
+        {
+            return View();
+        }
+
+        public IActionResult WieZijnWij()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
