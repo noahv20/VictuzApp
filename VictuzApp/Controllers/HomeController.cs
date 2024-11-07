@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using VictuzApp.Data;
 using VictuzApp.Models;
+using VictuzApp.Services;
 using VictuzApp.ViewModels;
 
 namespace VictuzApp.Controllers
@@ -18,13 +19,15 @@ namespace VictuzApp.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;    
         private readonly ApplicationDbContext _context;
+        private BestActivityService _bestActivityService;
 
-        public HomeController(ApplicationDbContext context,ILogger<HomeController> logger, UserManager<IdentityUser> userManager,RoleManager<IdentityRole> roleManager)
+        public HomeController(ApplicationDbContext context,ILogger<HomeController> logger, UserManager<IdentityUser> userManager,RoleManager<IdentityRole> roleManager, BestActivityService bestActivityService)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
             _roleManager = roleManager;
+            _bestActivityService = bestActivityService;
         }
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> GetUsers()
@@ -82,8 +85,8 @@ namespace VictuzApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var discounts = await _bestactivityService.GetDiscountsAsync();
-            return View(discounts);
+            var activities = await _bestActivityService.GetDiscountsAsync();
+            return View(activities);
         }
 
         public IActionResult Privacy()
