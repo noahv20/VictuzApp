@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@model VictuzApp.ViewModels.RoleUser
+@*@{
+    ViewData["Title"] = "Change User Role";
+}
+*@
+<div>
+    <h4>Activity</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Username
+        </dt>
+        <dd class="col-sm-10">
+            @Model.User.UserName
+        </dd>
+        <dt class="col-sm-2">
+            Email
+        </dt>
+        <dd class="col-sm-10">
+            @Model.User.Email
+        </dd>
+        <dt class="col-sm-2">
+            PhoneNumber
+        </dt>
+        @if(Model.User.PhoneNumber == null)
+        {
+            <dd class="col-sm-10">
+                No PhoneNumber
+            </dd>
+        }
+        else
+        {
+            <dd class="col-sm-10">
+                @Model.User.PhoneNumber
+            </dd>
+        }
+        <dt>
+            Roles
+        </dt>
+
+        @foreach(var role in @Model.UserRoles)
+        {
+            <dd class="col-sm-10">
+                @role
+            </dd>
+        }
+    </dl>
+    <form asp-action="ChangeRole" method="post">
+        <input type="hidden" name="userId" value="@Model.User.Id" />
+        <div>
+            <label for="roleDropDown">Rol:</label>
+            <select name="role" asp-items="@Model.SelectRoles" id="roleDropDown"></select>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>
+<div>
+    <a asp-action="GetUsers" asp-controller="Home">Back to Users</a>
+</div>
