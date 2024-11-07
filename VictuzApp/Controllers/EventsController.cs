@@ -17,6 +17,14 @@ namespace VictuzApp.Controllers
             _context = context;
             _userManager = userManager;
         }
+        [Authorize(Roles ="Admin,BoardMember")]
+        public async Task<IActionResult> ViewRegistrations(int eventId)
+        {
+            var e = await _context.Events.Include(e => e.Users)
+                .FirstOrDefaultAsync(e => e.Id == eventId);
+
+            return View(e);
+        }
         [HttpGet]
         public async Task<IActionResult> RegisterForActivity(int eventId)
         {
@@ -68,7 +76,9 @@ namespace VictuzApp.Controllers
         // GET: Activities
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Events.ToListAsync());
+            var events = await _context.Events.ToListAsync();
+            var sortedEvents = events.OrderByDescending(item => item.Date).ToList();
+            return View(sortedEvents);
         }
         // GET: Activities/Details/5
         public async Task<IActionResult> Details(int? id)

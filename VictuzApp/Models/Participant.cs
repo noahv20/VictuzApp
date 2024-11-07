@@ -2,8 +2,8 @@
 
 namespace VictuzApp.Models
 {
-    public class Participant : IdentityUser
+    public class Participant: IdentityUser
     {
-        public ICollection<Event>? Events { get; set; }
+        public ICollection<Event> Events { get; set; }
     }
 }
