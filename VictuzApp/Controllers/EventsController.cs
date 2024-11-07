@@ -79,15 +79,21 @@ namespace VictuzApp.Controllers
         // Toegevoegde zoekfunctionaliteit
         public async Task<IActionResult> Index(string searchTerm)
         {
-            var events = from e in _context.Events
-                         select e;
-
+            
             if (!string.IsNullOrEmpty(searchTerm))
             {
+                var events = from e in _context.Events
+                             select e;
                 events = events.Where(e => e.Title.Contains(searchTerm)); // Filteren op titel
+                return View(events);
+            }
+            else
+            {
+                var events = await _context.Events.ToListAsync();
+                var sortedEvents = events.OrderByDescending(item => item.Date).ToList();
+                return View(sortedEvents);
             }
 
-            return View(await events.ToListAsync());
         }
 
         // GET: Activities/Details/5
