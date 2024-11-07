@@ -17,6 +17,7 @@ namespace VictuzApp.Controllers
             _context = context;
             _userManager = userManager;
         }
+
         [HttpGet]
         public async Task<IActionResult> RegisterForActivity(int eventId)
         {
@@ -34,11 +35,12 @@ namespace VictuzApp.Controllers
 
             return View(e);
         }
+
         [HttpPost]
         public async Task<IActionResult> RegisterActivityGuest(int eventId, string name, string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if(user == null)
+            if (user == null)
             {
                 user = new IdentityUser()
                 {
@@ -53,9 +55,10 @@ namespace VictuzApp.Controllers
 
             return View("RegistrationSucces");
         }
-        //Register for an activity
+
+        // Register for an activity
         [HttpPost]
-        [Authorize] 
+        [Authorize]
         public async Task<IActionResult> RegisterActivity(int eventId)
         {
             string userId = _userManager.GetUserId(User);
@@ -66,10 +69,20 @@ namespace VictuzApp.Controllers
         }
 
         // GET: Activities
-        public async Task<IActionResult> Index()
+        // Toegevoegde zoekfunctionaliteit
+        public async Task<IActionResult> Index(string searchTerm)
         {
-            return View(await _context.Events.ToListAsync());
+            var events = from e in _context.Events
+                         select e;
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                events = events.Where(e => e.Title.Contains(searchTerm)); // Filteren op titel
+            }
+
+            return View(await events.ToListAsync());
         }
+
         // GET: Activities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -95,8 +108,6 @@ namespace VictuzApp.Controllers
         }
 
         // POST: Activities/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,Date,MaxParticipants")] Event activity)
@@ -127,8 +138,6 @@ namespace VictuzApp.Controllers
         }
 
         // POST: Activities/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Date,MaxParticipants")] Event activity)
