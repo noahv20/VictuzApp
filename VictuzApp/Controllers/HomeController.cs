@@ -80,9 +80,10 @@ namespace VictuzApp.Controllers
             return RedirectToAction(nameof(ChangeUserRole), new { userId });
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var discounts = await _bestactivityService.GetDiscountsAsync();
+            return View(discounts);
         }
 
         public IActionResult Privacy()
