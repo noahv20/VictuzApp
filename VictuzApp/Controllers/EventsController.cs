@@ -18,6 +18,64 @@ namespace VictuzApp.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        [Authorize(Roles = "Admin, BoardMember")]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var e = await _context.Events.Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+
+            e.IsSuggestion = false;
+
+            _context.Update(e);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("ViewSuggestions");
+
+        }
+
+        [Authorize (Roles = "Admin, BoardMember")]
+        public async Task<IActionResult> ViewSuggestions(string searchTerm)
+        {
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                var events = from e in _context.Events
+                             where e.IsSuggestion == true
+                             select e;
+                events = events.Where(e => e.Title.Contains(searchTerm)); // Filteren op titel
+                return View(events);
+            }
+            else
+            {
+                var events = await _context.Events.Where(e => e.IsSuggestion == true)
+                    .ToListAsync();
+                var sortedEvents = events.OrderByDescending(item => item.Date).ToList();
+                return View(sortedEvents);
+            }
+
+        }
+
+        [Authorize(Roles = "Member")]
+
+        public async Task<IActionResult> Suggestion()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Member")]
+        [HttpPost]
+        public async Task<IActionResult> Suggestion([Bind("Id,Title,Description,Date,MaxParticipants")] Event activity)
+        {
+            activity.IsSuggestion = true;
+            if (ModelState.IsValid)
+            {
+                _context.Add(activity);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(activity);
+           
+        }
         [Authorize(Roles ="Admin,BoardMember")]
         public async Task<IActionResult> ViewRegistrations(int? eventId)
         {
@@ -34,9 +92,8 @@ namespace VictuzApp.Controllers
                 var users = new List<ApplicationUser>();
                 foreach (var item in eu)
                     {
-                    users.Add(await _context.Users.Where(u => u.Id == item.UserId)
-                    .FirstOrDefaultAsync());
-                    
+                        users.Add(await _context.Users.Where(u => u.Id == item.UserId)
+                            .FirstOrDefaultAsync());
                     }
                 vm.Event = e;
                 vm.Users = users;
@@ -113,14 +170,16 @@ namespace VictuzApp.Controllers
             
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                var events = from e in _context.Events
+                var events = from e in _context.Events 
+                             where e.IsSuggestion== false
                              select e;
                 events = events.Where(e => e.Title.Contains(searchTerm)); // Filteren op titel
                 return View(events);
             }
             else
             {
-                var events = await _context.Events.ToListAsync();
+                var events = await _context.Events.Where(e=> e.IsSuggestion == false)
+                    .ToListAsync();
                 var sortedEvents = events.OrderByDescending(item => item.Date).ToList();
                 return View(sortedEvents);
             }

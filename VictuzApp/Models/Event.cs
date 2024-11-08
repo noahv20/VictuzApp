@@ -15,6 +15,11 @@ namespace VictuzApp.Models
         public DateTime Date { get; set; }
         [Required]
         public int MaxParticipants { get; set; }
+
+        // bool waarde waar zetten in controle
+        // alleen voor de member geen andere rol
+        // In index alleen bool false laten zien
+        public bool IsSuggestion { get; set; } = false;
         public ICollection<EventUser> EventUsers { get; set; } = new List<EventUser>();
     }
 }

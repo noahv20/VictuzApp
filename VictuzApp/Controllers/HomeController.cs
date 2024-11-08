@@ -85,8 +85,15 @@ namespace VictuzApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var e = await _context.Events.Where(e=>e.IsSuggestion == false)
+                .ToListAsync();
             var activities = await _bestActivityService.GetDiscountsAsync();
-            return View(activities);
+            var vm = new HomePageViewModel()
+            {
+                BestActivities = activities,
+                Events = e
+            };
+            return View(vm);
         }
 
         public IActionResult Privacy()

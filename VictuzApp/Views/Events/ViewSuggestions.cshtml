@@ -1,16 +1,8 @@
-﻿@model VictuzApp.ViewModels.HomePageViewModel
+﻿@model IEnumerable<VictuzApp.Models.Event>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Index";
 }
-
-<h2>Activiteiten van de maand:</h2>
-<ul>
-    @foreach (var bestactivity in Model.BestActivities)
-    {
-        <li><strong>@bestactivity.Name</strong>: @bestactivity.Description</li>
-    }
-</ul>
 
 <h2>Evenementen</h2>
 <p>
@@ -36,22 +28,22 @@
     <thead>
         <tr>
             <th>
-                Title
+                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                Description
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                Date
+                @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
-                MaxParticipants
+                @Html.DisplayNameFor(model => model.MaxParticipants)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Events)
+        @foreach (var item in Model)
         {
             <tr class="event-row">
                 <td>
@@ -73,17 +65,12 @@
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                        <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a> |
-                        <a asp-action="ViewRegistrations" asp-route-eventId="@item.Id">View Registrations</a>
+                        <a asp-action="Approve" asp-route-id="@item.Id">Approve</a>
+
+
                     </td>
                 }
-                else if (User.IsInRole("Member"))
-                {
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a>
-                    </td>
-                }
+                
 
                 else if (User.IsInRole("BoardMember"))
                 {
@@ -91,18 +78,9 @@
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                        <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a> |
-                        <a asp-action="ViewRegistrations" asp-route-eventId="@item.Id">View Registrations</a>
                     </td>
                 }
-                else
-                {
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a>
-                    </td>
-
-                }
+                
 
 
 
@@ -110,6 +88,4 @@
         }
     </tbody>
 </table>
-
-
 
