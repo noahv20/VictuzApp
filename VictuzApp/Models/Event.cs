@@ -15,6 +15,6 @@ namespace VictuzApp.Models
         public DateTime Date { get; set; }
         [Required]
         public int MaxParticipants { get; set; }
-        public ICollection<Participant>? Users { get; set; }
+        public ICollection<EventUser> EventUsers { get; set; } = new List<EventUser>();
     }
 }

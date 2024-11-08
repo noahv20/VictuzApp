@@ -4,29 +4,56 @@ using VictuzApp.Data;
 using VictuzApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using VictuzApp.ViewModels;
 
 namespace VictuzApp.Controllers
 {
     public class EventsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EventsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public EventsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
         [Authorize(Roles ="Admin,BoardMember")]
-        public async Task<IActionResult> ViewRegistrations(int eventId)
+        public async Task<IActionResult> ViewRegistrations(int? eventId)
         {
-            var e = await _context.Events.Include(e => e.Users)
-                .FirstOrDefaultAsync(e => e.Id == eventId);
+            if (eventId == null)
+            {
+                return NotFound();
+            }
+            var e = await _context.Events.FirstOrDefaultAsync(e => e.Id == eventId);
+            var eu = await _context.EventUsers.Where(e => e.EventId == eventId)
+                .ToListAsync();
+            if(eu != null)
+            {
+                var vm = new RegstrationsViewModel();
+                var users = new List<ApplicationUser>();
+                foreach (var item in eu)
+                    {
+                    users.Add(await _context.Users.Where(u => u.Id == item.UserId)
+                    .FirstOrDefaultAsync());
+                    
+                    }
+                vm.Event = e;
+                vm.Users = users;
+                return View(vm);
+            }else
+            {
+                var vm = new RegstrationsViewModel()
+                {
+                    Event = e
+                };
+                return View(vm);
+            }
 
-            return View(e);
+            
         }
         [HttpGet]
-        public async Task<IActionResult> RegisterForActivity(int eventId)
+        public async Task<IActionResult> RegisterForActivity(int? eventId)
         {
             if (eventId == null)
             {
@@ -44,12 +71,16 @@ namespace VictuzApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterActivityGuest(int eventId, string name, string email)
+        public async Task<IActionResult> RegisterActivityGuest(int? eventId, string? name, string? email)
         {
+            if(eventId == null|| name== null|| email == null)
+            {
+                return NotFound();
+            }
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                user = new IdentityUser()
+                user = new ApplicationUser()
                 {
                     Email = email,
                     UserName = name
@@ -57,7 +88,7 @@ namespace VictuzApp.Controllers
                 await _userManager.CreateAsync(user);
             }
             string userId = await _userManager.GetUserIdAsync(user);
-            _context.Database.ExecuteSqlRaw("INSERT INTO EventParticipant (EventsId, UsersId) VALUES ({0},{1})", eventId, userId);
+            _context.Database.ExecuteSqlRaw("INSERT INTO EventUsers (EventId, UserId) VALUES ({0},{1})", eventId, userId);
             await _context.SaveChangesAsync();
 
             return View("RegistrationSucces");
@@ -69,7 +100,7 @@ namespace VictuzApp.Controllers
         public async Task<IActionResult> RegisterActivity(int eventId)
         {
             string userId = _userManager.GetUserId(User);
-            _context.Database.ExecuteSqlRaw("INSERT INTO EventParticipant (EventsId, UsersId) VALUES ({0},{1})", eventId, userId);
+            _context.Database.ExecuteSqlRaw("INSERT INTO EventUsers (EventId, UserId) VALUES ({0},{1})", eventId, userId);
             await _context.SaveChangesAsync();
 
             return View("RegistrationSucces");

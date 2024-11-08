@@ -6,6 +6,6 @@ namespace VictuzApp.ViewModels
     public class RegstrationsViewModel
     {
         public Event Event { get; set; }
-        public ICollection<IdentityUser> Users { get; set; }
+        public ICollection<ApplicationUser> Users { get; set; }
     }
 }

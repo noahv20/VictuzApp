@@ -16,12 +16,12 @@ namespace VictuzApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;    
         private readonly ApplicationDbContext _context;
         private BestActivityService _bestActivityService;
 
-        public HomeController(ApplicationDbContext context,ILogger<HomeController> logger, UserManager<IdentityUser> userManager,RoleManager<IdentityRole> roleManager, BestActivityService bestActivityService)
+        public HomeController(ApplicationDbContext context,ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager, BestActivityService bestActivityService)
         {
             _context = context;
             _logger = logger;

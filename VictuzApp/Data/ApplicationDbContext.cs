@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using VictuzApp.Models;
 
 namespace VictuzApp.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Event> Events { get; set; }
+        public DbSet<EventUser> EventUsers { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -15,9 +17,19 @@ namespace VictuzApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Event>()
-                .HasMany(e => e.Users)
-                .WithMany(p => p.Events);
+            modelBuilder.Entity<EventUser>()
+            .HasKey(iue => new { iue.UserId, iue.EventId });
+
+            modelBuilder.Entity<EventUser>()
+                .HasOne(iue => iue.User)
+                .WithMany(u => u.EventUsers)
+                .HasForeignKey(iue => iue.UserId);
+
+            modelBuilder.Entity<EventUser>()
+                .HasOne(iue => iue.Event)
+                .WithMany(e => e.EventUsers)
+                .HasForeignKey(iue => iue.EventId);
+
 
             //Activity Data Seed (Dummy Data)
             Event e = new Event()
@@ -29,7 +41,7 @@ namespace VictuzApp.Data
                 MaxParticipants = 30
             };
 
-           
+
 
             // Add Data To Database
             modelBuilder.Entity<Event>()
