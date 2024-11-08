@@ -59,4 +59,7 @@ footer .container {
 .cursor {
     cursor: pointer;
 }
+.event-row {
+    border: 2px solid white;
+}
 
