@@ -15,7 +15,14 @@
 
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
+    @if (User.IsInRole("BoardMember"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
 </p>
 <table class="table">
     <thead>
@@ -37,7 +44,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+        <tr class="event-row">
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
@@ -50,14 +57,44 @@
             <td>
                 @Html.DisplayFor(modelItem => item.MaxParticipants)
             </td>
+
+            @if(User.IsInRole("Admin")){
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a> |
                 <a asp-action="ViewRegistrations" asp-route-eventId="@item.Id">View Registrations</a>
             </td>
-        </tr>
+            }
+            else if (User.IsInRole("Member")){
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a> 
+            </td>
+            }   
+
+            else if (User.IsInRole("BoardMember"))
+                {
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a> |
+                <a asp-action="ViewRegistrations" asp-route-eventId="@item.Id">View Registrations</a>
+            </td>
+            }
+                else {
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="RegisterForActivity" asp-route-eventId="@item.Id">Register</a>
+                </td>
+
+                }
+
+
+
+            </tr>
 }
     </tbody>
 </table>

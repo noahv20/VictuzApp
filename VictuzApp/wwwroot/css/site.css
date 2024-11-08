@@ -56,3 +56,10 @@ footer .container {
     font-size: 12px
 }
 
+.cursor {
+    cursor: pointer;
+}
+.event-row {
+    border: 2px solid white;
+}
+

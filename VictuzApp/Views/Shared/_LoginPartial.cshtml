@@ -6,8 +6,8 @@
 @if (SignInManager.IsSignedIn(User))
 {
      <li class="nav-item">
-            <button class="nav-button-afmelden" onclick="window.location.href='https://localhost:7057/Identity/Account/Logout'">Afmelden</button>
-            <img src="~/images/account.png" onclick="window.location.href='https://localhost:7057/Identity/Account'" alt="account" height="40" width="40">
+            <button class="nav-button-afmelden" onclick="window.location.href='https://localhost:7057/Identity/Account/Logout'">Uitloggen</button>
+            <img class="cursor" src="~/images/account.png" onclick="window.location.href='https://localhost:7057/Identity/Account'" alt="account" height="40" width="40">
          </li>
 }
 else
@@ -15,7 +15,7 @@ else
         <li class="nav-item">
             <div>
                 <button class="nav-button-wordlid" onclick="window.location.href='https://localhost:7057/Identity/Account/Register'">WORD LID!</button>
-                <img src="~/images/account.png" onclick="window.location.href='https://localhost:7057/Identity/Account/Login'" alt="account" height="40" width="40">
+                <img class="cursor" src="~/images/account.png" onclick="window.location.href='https://localhost:7057/Identity/Account/Login'" alt="account" height="40" width="40">
             </div>
         </li>
 
