@@ -43,11 +43,22 @@
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
                 </td>
                 <td>
-                    @*@if (item.Contains("Admin"))
+                    @if (User.IsInRole("Admin"))
                     {
                         <p>Admin</p>
                     }
-                    *@
+                    else if (User.IsInRole("BoardMember"))
+                    {
+                        <p>BoardMember</p>
+                    }
+                    else if (User.IsInRole("Member"))
+                    {
+                        <p>Member</p>
+                    }
+                    else
+                    {
+                        <p>Guest</p>
+                    }
 
                 </td>
                 <td>
