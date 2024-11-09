@@ -143,6 +143,7 @@ namespace VictuzApp.Controllers
                     UserName = name
                 };
                 await _userManager.CreateAsync(user);
+                await _userManager.AddToRoleAsync(user, "Guest");
             }
             string userId = await _userManager.GetUserIdAsync(user);
             _context.Database.ExecuteSqlRaw("INSERT INTO EventUsers (EventId, UserId) VALUES ({0},{1})", eventId, userId);

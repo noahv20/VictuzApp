@@ -32,8 +32,24 @@ namespace VictuzApp.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> GetUsers()
         {
+            var vm = new List<UserRolesViewModel>();
+
             var users = await _context.Users.ToListAsync();
-            return View(users);
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                var viewModel = new UserRolesViewModel()
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    Roles = roles
+                };
+
+                vm.Add(viewModel);
+            }
+            return View(vm);
         }
         [HttpGet]
         [Authorize(Roles ="Admin")]

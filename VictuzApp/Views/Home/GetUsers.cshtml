@@ -1,33 +1,35 @@
 ﻿@using VictuzApp.ViewModels
 @using VictuzApp.Models
+@using Microsoft.AspNetCore.Identity
 
-@model IEnumerable<ApplicationUser>
+@inject UserManager<ApplicationUser> _userManager
+
+@model IEnumerable<UserRolesViewModel>
 
 @{
     ViewData["Title"] = "GetUsers";
 }
 
-<h1>GetUsers</h1>
-
+<h1>Users</h1>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                Huidige rol
-            </th>
-            <th>
-                Rol aanpassen
-            </th>
-        </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+                <th>
+                    Huidige rol
+                </th>
+                <th>
+                    Rol aanpassen
+                </th>
+            </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
@@ -42,27 +44,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
                 </td>
+                @foreach (var role in item.Roles)
+                {
+                    <td>
+                        @role
+                    </td>
+                }
                 <td>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <p>Admin</p>
-                    }
-                    else if (User.IsInRole("BoardMember"))
-                    {
-                        <p>BoardMember</p>
-                    }
-                    else if (User.IsInRole("Member"))
-                    {
-                        <p>Member</p>
-                    }
-                    else
-                    {
-                        <p>Guest</p>
-                    }
-
-                </td>
-                <td>
-                    <a asp-action="ChangeUserRole" asp-route-userId="@item.Id">Change Role</a>
+                    <a asp-action="ChangeUserRole" asp-route-userId="@item.UserId">Change Role</a>
                 </td>
             </tr>
         }
