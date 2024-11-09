@@ -63,3 +63,16 @@ footer .container {
     border: 2px solid white;
 }
 
+.uitloggen {
+    color: white;
+    border: 1px solid black;
+    background-color: red;
+}
+
+.home-button {
+    margin: 20px auto 0; 
+    width: 200px;
+    height: 70px;
+    font-size: 30px;
+}
+

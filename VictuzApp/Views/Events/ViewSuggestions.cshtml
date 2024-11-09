@@ -4,26 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Evenementen</h2>
-<p>
-    <form method="get" asp-action="Index">
-        <input type="text" name="searchTerm" placeholder="Zoek evenement titel..." />
-        <button type="submit">Zoeken</button>
-    </form>
-</p>
-
-
-
-<p>
-    @if (User.IsInRole("Admin"))
-    {
-        <a asp-action="Create">Create New</a>
-    }
-    @if (User.IsInRole("BoardMember"))
-    {
-        <a asp-action="Create">Create New</a>
-    }
-</p>
+<h2>Voorstellen die zijn gedaan voor evenementen</h2>
 <table class="table">
     <thead>
         <tr>

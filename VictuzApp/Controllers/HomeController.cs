@@ -85,14 +85,20 @@ namespace VictuzApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var e = await _context.Events.Where(e=>e.IsSuggestion == false)
-                .ToListAsync();
+            var e = await _context.Events
+                   .Where(e => e.IsSuggestion == false)
+                   .OrderBy(e => e.Date)
+                   .Take(3) 
+                   .ToListAsync();
+
             var activities = await _bestActivityService.GetDiscountsAsync();
+
             var vm = new HomePageViewModel()
             {
                 BestActivities = activities,
                 Events = e
             };
+
             return View(vm);
         }
 

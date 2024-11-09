@@ -1,4 +1,7 @@
-﻿@model IEnumerable<ApplicationUser>
+﻿@using VictuzApp.ViewModels
+@using VictuzApp.Models
+
+@model IEnumerable<ApplicationUser>
 
 @{
     ViewData["Title"] = "GetUsers";
@@ -18,12 +21,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
+            <th>
+                Huidige rol
+            </th>
+            <th>
+                Rol aanpassen
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr class="event-row">
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
@@ -32,6 +41,14 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @*@if (item.Contains("Admin"))
+                    {
+                        <p>Admin</p>
+                    }
+                    *@
+
                 </td>
                 <td>
                     <a asp-action="ChangeUserRole" asp-route-userId="@item.Id">Change Role</a>
